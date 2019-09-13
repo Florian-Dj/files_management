@@ -5,7 +5,7 @@ import re
 import shutil
 from datetime import datetime
 import time
-import missing_files
+from script import missing_files
 import configparser
 
 config = configparser.ConfigParser()
