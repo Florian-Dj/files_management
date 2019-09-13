@@ -24,7 +24,7 @@ def compare(list_folder, path_folder, logs_list):
         maximum = int(re.findall(r" \d+", list_files[i][1][-1])[0])  # Look le numero max des fichiers dans le dossier
         minimum = int(re.findall(r" \d+", list_files[i][1][0])[0])  # Look le numero min des fichiers dans le dossier
         if len(list_files[i][1]) < maximum - minimum + 1:  # Si moins de fichier que le calcul max - min + 1
-            x = 1  # Incémente le numéro du fichier par le nom
+            x = minimum  # Incémente le numéro du fichier par le nom
             y = 0  # Incémente le numéro du fichier dans la liste
             missing_number = []  # Reset de la liste des numéros manquant
             while y < len(list_files[i][1]):

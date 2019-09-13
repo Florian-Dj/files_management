@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fe77a8e1-3243-43c2-b2c1-518e993cdd06" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/config.cfg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/file_sorter.py" beforeDir="false" afterPath="$PROJECT_DIR$/file_sorter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/missing_files.py" beforeDir="false" afterPath="$PROJECT_DIR$/missing_files.py" afterDir="false" />

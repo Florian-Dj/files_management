@@ -4,9 +4,15 @@ import os
 import re
 import shutil
 from datetime import datetime
+import time
 import missing_files
+import configparser
 
-path_folder = "D:\\DL\\Animes"  # Chemin vers le dossier a traité
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+path_folder = config['Config']['path_folder']  # Chemin à changer dans le fichier de config
+logs_options = config['Config']['logs']  # Option pour les traitements des logs
 list_folder = []  # Liste des dossiers
 list_file = []  # Liste des fichiers sans dossiers
 logs_list = []  # Liste des logs
@@ -28,7 +34,7 @@ def folders_list():  # Liste des dossiers
 def files_list():  # Liste des fichiers en .mp4 et .mkv
     for files in os.listdir(path_folder):
         _, ext = os.path.splitext(files)
-        if ext == ".mp4" or ext == ".mkv" or ext == ".MP4":
+        if ext == ".mp4" or ext == ".mkv" or ext == ".MP4" or ext == ".avi":
             list_file.append(files)
     return list_file
 
@@ -46,7 +52,7 @@ def compare(folder_list, file_list):  # Comparaison des dossiers et des fichiers
                 text_warning(file)
             else:
                 no_folder += 1
-    # logs_write(logs_list)
+    logs_write(logs_list)
 
 
 def text_warning(file):
@@ -107,7 +113,8 @@ def move(file, folder):
     if folder == "Vrac":
         logs_add(folder, file, file, "WARNING")  # Lance la function pour les logs
     else:
-        logs_add(folder, file, file, "INFO")  # Lance la function pour les logs
+        if logs_options == "total":
+            logs_add(folder, file, file, "INFO")  # Lance la function pour les logs
     old_file = "{p}\\{a}".format(p=path_folder, a=file)  # Chemin de l'ancien fichier
     if duplicate(file, folder, old_file):
         new_file = "{p}\\{f}\\{a}.mp4".format(p=path_folder, f=folder, a=file)  # Chemin du nouveau fichier
@@ -130,11 +137,11 @@ def move_rename(file, folder):  # Déplacer et Renommer un fichier
             number = "0" + number
         new_name = "{f} {n}.mp4".format(f=folder, n=number)  # Nom du nouveau fichier
     except IndexError:  # Si fichier non numéro
-        print("Dans le except")
         new_name = "{f}.mp4".format(f=folder)  # Nom du nouveau fichier
     old_file = "{p}\\{a}".format(p=path_folder, a=file)  # Chemin de l'ancien fichier
     if duplicate(new_name, folder, old_file):
-        logs_add(folder, file, new_name, "INFO")  # Lance la function pour les logs
+        if logs_options == "total":
+            logs_add(folder, file, new_name, "INFO")  # Lance la function pour les logs
         new_file = "{p}\\{f}\\{n}".format(p=path_folder, f=folder, n=new_name)  # Chemin du nouveau fichier
         shutil.move(old_file, new_file)  # Déplace le fichier dans le dossier
 
@@ -195,9 +202,19 @@ def logs_write(logs):  # Ecriture les logs dans le fichier
 if __name__ == "__main__":
     logs_read()
     compare(folders_list(), files_list())
+    time.sleep(0.2)
     missing_files.compare(list_folder, path_folder, logs_list)
 
 
+# todo:
 """
-    Problème si deux dossiers commence avec le même nom (One Peace, One Punch Man) [One]
+    Bugs:
+        - Si deux dossiers commence avec le même nom (One Peace, One Punch Man) [One]
+        
+    Upgrade:
+        - Lancer l'appli depuis un .exe
+        - Fichier Excel pour les logs :
+            * Première page avec les logs
+            * Deuxième page avec un récap des fichiers manquants par dossier
+        - Interface graphique avec bouton pour choisir le dossier à traiter, un bouton start et les logs
 """
