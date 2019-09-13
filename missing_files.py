@@ -33,8 +33,8 @@ def compare(list_folder, path_folder, logs_list):
                     x += 1
                     y += 1
                 else:
-                    x += 1
                     missing_number.append(x)  # Ajout du numéro du fichier manquant dans la liste missing_list
+                    x += 1
             # Ajout du nom du dossier et de la missing_list dans une liste
             missing_files.append([list_files[i][0], missing_number])
         i += 1

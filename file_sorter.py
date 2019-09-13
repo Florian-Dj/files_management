@@ -186,12 +186,10 @@ def logs_add(folder, old_file, new_file, info):  # Ajouter les logs dans la list
     return logs_list
 
 
-"""
 def logs_write(logs):  # Ecriture les logs dans le fichier
     with open("{p}\\logs.txt".format(p=path_folder), mode="w", encoding='utf-8') as text:
         for logs_list_write in logs:  # Boucle pour lire toute la liste logs
             text.write(logs_list_write)  # Ecriture dans le fichier logs
-"""
 
 
 if __name__ == "__main__":
