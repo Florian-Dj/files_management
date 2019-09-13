@@ -41,18 +41,25 @@ def files_list():  # Liste des fichiers en .mp4 et .mkv
 
 def compare(folder_list, file_list):  # Comparaison des dossiers et des fichiers
     for file in file_list:  # Boucle des fichiers
-        no_folder = 0
+        mirror_folder = []
         for folder in folder_list:  # Boucle des dossiers
             if file.split('.')[0] == folder.split(" ")[0] or \
                 file.split("_")[0] == folder.split(" ")[0] or \
                 file.split(" ")[0] == folder.split(" ")[0] or \
                     file.split("-")[0] == folder.split(" ")[0]:  # Premier mot file == premier mot folder
-                move_rename(file, folder)
-            elif no_folder + 1 == len(folder_list):
-                text_warning(file)
-            else:
-                no_folder += 1
+                mirror_folder.append(folder)
+                #move_rename(file, folder)
+        if len(mirror_folder) == 1:
+            move_rename(file, mirror_folder[0])
+        elif len(mirror_folder) > 1:
+            mirror_folders(file, mirror_folder)
+        else:
+            text_warning(file)
+
     logs_write(logs_list)
+
+
+# Gestion du fichier si aucun dossier est en commain
 
 
 def text_warning(file):
@@ -86,6 +93,9 @@ def warning(file):
         warning(file)
 
 
+# Gestion du fichier si choix 1 est choisi
+
+
 def text_choose_folder(file):
     # Print pour voir tous les dossiers existant
     print("""====== Fichier sans dossier ======
@@ -107,6 +117,9 @@ def choose_folder(file):
     else:
         print("Mauvaise saisie !")
         choose_folder(file)
+
+
+# Gestion du rename et/ou du fichier selectionner
 
 
 def move(file, folder):
@@ -140,10 +153,33 @@ def move_rename(file, folder):  # Déplacer et Renommer un fichier
         new_name = "{f}.mp4".format(f=folder)  # Nom du nouveau fichier
     old_file = "{p}\\{a}".format(p=path_folder, a=file)  # Chemin de l'ancien fichier
     if duplicate(new_name, folder, old_file):
-        if logs_options == "total":
-            logs_add(folder, file, new_name, "INFO")  # Lance la function pour les logs
         new_file = "{p}\\{f}\\{n}".format(p=path_folder, f=folder, n=new_name)  # Chemin du nouveau fichier
         shutil.move(old_file, new_file)  # Déplace le fichier dans le dossier
+        if logs_options == "total":
+            logs_add(folder, file, new_name, "INFO")  # Lance la function pour les logs
+
+
+# Gestion du fichier si plusieurs dossier en commain
+
+
+def mirror_folders(file, list_folders):
+    # Print pour voir tous les dossiers en commun
+    print("""====== Fichier avec plusieurs dossiers ======
+    {}""".format(file))
+    n = 1
+    for folder in list_folders:
+        print("    {n} - {f}".format(n=n, f=folder))
+        n += 1
+    choose_mirror_folder(file, list_folders)
+
+
+def choose_mirror_folder(file, list_folders):
+    choose = int(input("Dans quel dossier voulez-vous transférer le fichier ?"))
+    if 1 <= choose <= len(list_folders):
+        move_rename(file, list_folders[choose - 1])
+    else:
+        print("Mauvaise saisie !")
+        choose_mirror_folder(file, list_folders)
 
 
 def create_folder(file):  # Création de dossier
@@ -157,7 +193,7 @@ def create_folder(file):  # Création de dossier
         move_rename(file, new_folder)
 
 
-def duplicate(file, folder, old_file):
+def duplicate(file, folder, old_file):  # Verifie si le fichier n'existe pas déjà dans le dossier
     name = old_file.split("\\")[3]
     list_files = "{p}\\{f}".format(p=path_folder, f=folder)
     check = True
@@ -170,7 +206,8 @@ def duplicate(file, folder, old_file):
     if check:
         return check
 
-# Toutes les def pour les Logs
+
+# Functions pour les Logs
 
 
 def logs_read():  # Lire le fichier des logs
