@@ -244,10 +244,7 @@ if __name__ == "__main__":
 
 
 # todo:
-"""
-    Bugs:
-        - Si deux dossiers commence avec le même nom (One Peace, One Punch Man) [One]
-        
+"""        
     Upgrade:
         - Lancer l'appli depuis un .exe
         - Fichier Excel pour les logs :
