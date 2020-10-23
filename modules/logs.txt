@@ -1,0 +1,10 @@
+[23-10-2020 - 12:19:15][INFO]: Fruits Basket 2019 S02 EP07 VOSTFR WEBDL 1080P X264.mkv ==> Fruits\Fruits 07.mp4
+[23-10-2020 - 12:18:24][DUPLICATE]: PycharmProjects ==> Doublon\PycharmProjects
+[23-10-2020 - 12:17:38][INFO]: Fruits Basket 2019 S02 EP05 VOSTFR WEBDL 1080P X264.mkv ==> Fruits\Fruits 2019.mp4
+[23-10-2020 - 12:15:16][DUPLICATE]: PycharmProjects ==> Doublon\PycharmProjects
+[23-10-2020 - 12:14:09][INFO]: Fruits Basket 2019 S02 EP03 VOSTFR WEBDL 1080P X264.mkv ==> Fruits\Fruits.mp4
+[23-10-2020 - 12:13:17][INFO]: Fruits Basket 2019 S02 EP02 VOSTFR WEBDL 1080P X264.mkv ==> Fruits\Fruits.mp4
+[23-10-2020 - 12:06:01][INFO]: Fruits Basket 2019 S02 EP01 VOSTFR WEBDL 1080P X264.mkv ==> Fruits\Fruits 2019.mp4
+[08-05-2020 - 19:11:43][NEWS]: Création du dossier Doublon
+[08-05-2020 - 19:11:43][NEWS]: Création du dossier Films
+[08-05-2020 - 19:11:43][NEWS]: Création du dossier Vrac

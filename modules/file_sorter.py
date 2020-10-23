@@ -5,14 +5,9 @@ import re
 import shutil
 from datetime import datetime
 import time
-from script import missing_files
-import configparser
+import modules
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-
-path_folder = config['Config']['path_folder']  # Chemin à changer dans le fichier de config
-logs_options = config['Config']['logs']  # Option pour les traitements des logs
+path_folder = os.getcwd()  # Chemin à changer dans le fichier de config
 list_folder = []  # Liste des dossiers
 list_file = []  # Liste des fichiers sans dossiers
 logs_list = []  # Liste des logs
@@ -48,7 +43,6 @@ def compare(folder_list, file_list):  # Comparaison des dossiers et des fichiers
                 file.split(" ")[0] == folder.split(" ")[0] or \
                     file.split("-")[0] == folder.split(" ")[0]:  # Premier mot file == premier mot folder
                 mirror_folder.append(folder)
-                #move_rename(file, folder)
         if len(mirror_folder) == 1:
             move_rename(file, mirror_folder[0])
         elif len(mirror_folder) > 1:
@@ -64,19 +58,19 @@ def compare(folder_list, file_list):  # Comparaison des dossiers et des fichiers
 
 def text_warning(file):
     print("""====== Fichier sans dossier ======
-    {}
+    {f}
     1 - Voir les dossiers existant
     2 - Déplacer dans le dossier Vrac
     3 - Déplacer dans le dossier Films
     4 - Créer un dossier
-    5 - Pas actions
-    """.format(file))
+    0 - Pas actions
+    """.format(f=file))
     warning(file)
 
 
 def warning(file):
     choose = input("Merci de faire votre choix :")  # Input pour faire son choix d'action
-    choose_list = ["1", "2", "3", "4", "5"]  # Liste des choix possible
+    choose_list = ["1", "2", "3", "4", "0"]  # Liste des choix possible
     if choose in choose_list:
         if choose == "1":
             text_choose_folder(file)
@@ -86,7 +80,7 @@ def warning(file):
             move(file, "Films")
         elif choose == "4":
             create_folder(file)
-        elif choose == "5":
+        elif choose == "0":
             pass
     else:
         print("Faire une bonne saisie!")
@@ -126,8 +120,7 @@ def move(file, folder):
     if folder == "Vrac":
         logs_add(folder, file, file, "WARNING")  # Lance la function pour les logs
     else:
-        if logs_options == "total":
-            logs_add(folder, file, file, "INFO")  # Lance la function pour les logs
+        logs_add(folder, file, file, "INFO")  # Lance la function pour les logs
     old_file = "{p}\\{a}".format(p=path_folder, a=file)  # Chemin de l'ancien fichier
     if duplicate(file, folder, old_file):
         new_file = "{p}\\{f}\\{a}.mp4".format(p=path_folder, f=folder, a=file)  # Chemin du nouveau fichier
@@ -143,6 +136,8 @@ def move_rename(file, folder):  # Déplacer et Renommer un fichier
             number = re.findall(r"S\d+\.\d+", file)[0].split('.')[1]
         elif re.findall(r"E\d+", file):
             number = re.findall(r"E\d+", file)[0].split('E')[1]
+        elif re.findall(r"EP\d+", file):
+            number = re.findall(r"EP\d+", file)[0].split('EP')[1]
         else:
             number = re.findall(r'\d+', file)[0]
         number_list = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
@@ -155,8 +150,7 @@ def move_rename(file, folder):  # Déplacer et Renommer un fichier
     if duplicate(new_name, folder, old_file):
         new_file = "{p}\\{f}\\{n}".format(p=path_folder, f=folder, n=new_name)  # Chemin du nouveau fichier
         shutil.move(old_file, new_file)  # Déplace le fichier dans le dossier
-        if logs_options == "total":
-            logs_add(folder, file, new_name, "INFO")  # Lance la function pour les logs
+        logs_add(folder, file, new_name, "INFO")  # Lance la function pour les logs
 
 
 # Gestion du fichier si plusieurs dossier en commain
@@ -221,12 +215,12 @@ def logs_read():  # Lire le fichier des logs
 
 
 def logs_add(folder, old_file, new_file, info):  # Ajouter les logs dans la liste log
+    time_info = datetime.now().strftime("[%d-%m-%Y - %H:%M:%S]")
     if info == "NEWS":  # Ecriture dans le fichier logs
-        logs_list.insert(0, "{d}[{i}]: Création du dossier {f}\n".format(d=datetime.now().strftime("\
-[%d-%m-%Y - %H:%M:%S]"), i=info, f=folder))
+        logs_list.insert(0, "{d}[{i}]: Création du dossier {f}\n".format(d=time_info, i=info, f=folder))
     else:  # Ecriture dans le fichier logs
-        logs_list.insert(0, "{d}[{i}]: {o} ==> {f}\\{n}\n".format(d=datetime.now().strftime("\
-[%d-%m-%Y - %H:%M:%S]"), i=info, o=old_file, f=folder, n=new_file))
+        logs_list.insert(0, "{d}[{i}]: {o} ==> {f}\\{n}\n"
+                         .format(d=time_info, i=info, o=old_file, f=folder, n=new_file))
     return logs_list
 
 
@@ -240,15 +234,4 @@ if __name__ == "__main__":
     logs_read()
     compare(folders_list(), files_list())
     time.sleep(0.2)
-    missing_files.compare(list_folder, path_folder, logs_list)
-
-
-# todo:
-"""        
-    Upgrade:
-        - Lancer l'appli depuis un .exe
-        - Fichier Excel pour les logs :
-            * Première page avec les logs
-            * Deuxième page avec un récap des fichiers manquants par dossier
-        - Interface graphique avec bouton pour choisir le dossier à traiter, un bouton start et les logs
-"""
+    modules.missing_files.compares(list_folder, path_folder, logs_list)

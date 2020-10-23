@@ -8,7 +8,7 @@ list_files = []  # Liste des fichiers sans dossiers
 missing_files = []  # Liste des fichiers manquant
 
 
-def compare(list_folder, path_folder, logs_list):
+def compares(list_folder, path_folder, logs_list):
     for folders in list_folder:
         # Liste avec nom dossier + nom fichiers eux même dans une liste
         list_files.append([folders] + [os.listdir("{p}\\{f}".format(p=path_folder, f=folders))])
